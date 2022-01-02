@@ -6,28 +6,28 @@ import java.util.HashMap;
 public class Person {
     private ArrayList<String> messagesHeard = new ArrayList<>();
     private HashMap<Person, Integer> peopleInRange = new HashMap<>();
-    private Integer position;
+    private Integer MAX_HEARING_DISTANCE  = 100;
+    private Integer location = 0;
 
-    Person(Integer position){
-        this.position = position;
-    }
-    public void moveTo(Integer distance) {
+    public void moveTo(Integer location) {
+        this.location = location;
     }
 
     public void shout(String msg) {
-        peopleInRange.forEach((person, distance) -> {
-            if (person.InRange(distance)){
+        for (var person : peopleInRange.keySet()) {
+            if (person.InRange(location)){
                 person.Hear(msg);
             }
-        });
+        }
     }
 
     private void Hear(String msg) {
         messagesHeard.add(msg);
     }
 
-    private boolean InRange(Integer distance) {
-        return  distance <= position;
+    private boolean InRange(Integer locationOfShoutingSound) {
+        var distance =  this.location - locationOfShoutingSound;
+        return distance<= MAX_HEARING_DISTANCE;
     }
 
     public ArrayList<String> getMessagesHeard() {
