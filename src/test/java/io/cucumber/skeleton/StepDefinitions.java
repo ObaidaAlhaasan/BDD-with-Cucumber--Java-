@@ -1,5 +1,6 @@
 package io.cucumber.skeleton;
 
+import io.cucumber.datatable.DataTable;
 import io.cucumber.java.Before;
 import io.cucumber.java.DataTableType;
 import io.cucumber.java.en.Given;
@@ -7,9 +8,7 @@ import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import org.junit.Assert;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class StepDefinitions {
 
@@ -38,13 +37,13 @@ public class StepDefinitions {
     public void createNetwork() {
         network = new Network();
         people = new HashMap<>();
+        sean.setNetwork(network);
     }
 
     @Given("{person} is standing/located {int} metre(s) from Sean")
     public void lucy_is_metres_from_Sean(Person person, Integer distance) {
         rangePerson = person;
         rangePerson.moveTo(distance);
-        sean.setNetwork(network);
         rangePerson.setNetwork(network);
     }
 
@@ -65,8 +64,10 @@ public class StepDefinitions {
     }
 
     @Given("a person named {word}")
-    public void aPersonNamedLucy(String word) {
-        people.put(word, new Person(word));
+    public void aPersonNamed(String word) {
+        Person person = new Person(word);
+        person.setNetwork(network);
+        people.put(word, person);
     }
 
     @Given("the range is {int}")
@@ -105,4 +106,15 @@ public class StepDefinitions {
         Assert.assertEquals(1, people.get("Lucy").getMessagesHeard().size());
     }
 
+
+    @Then("Lucy hears the following messages:")
+    public void lucy_hears_the_following_messages(io.cucumber.datatable.DataTable expectedMsg) {
+        List<List<String>> actualMessages = new ArrayList<List<String>>();
+        List<String> heard = people.get("Lucy").getMessagesHeard();
+        for (String message : heard) {
+            actualMessages.add(Collections.singletonList(message));
+        }
+
+        expectedMsg.diff(DataTable.create(actualMessages));
+    }
 }

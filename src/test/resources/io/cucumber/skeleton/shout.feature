@@ -32,3 +32,14 @@ Feature: Shout
         | Lucy | 50       |
       When Sean shouts
       Then Lucy should hear a shout
+
+
+  Rule: Listener should be able to hear multiple shouts
+
+    Scenario: Two shouts
+      Given a person named Sean
+      When Sean shouts "Free bagels!"
+      And Sean shouts "Free toast!"
+      Then Lucy hears the following messages:
+        | Free bagels! |
+        | Free toast!  |
