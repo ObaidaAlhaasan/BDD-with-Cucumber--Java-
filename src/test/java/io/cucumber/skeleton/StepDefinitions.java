@@ -1,6 +1,7 @@
 package io.cucumber.skeleton;
 
 import io.cucumber.java.Before;
+import io.cucumber.java.DataTableType;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
@@ -17,6 +18,21 @@ public class StepDefinitions {
     private String msgFromSean;
     private Network network;
     private HashMap<String, Person> people;
+
+    public static class Whereabouts {
+        public String name;
+        public Integer location;
+
+        public Whereabouts(String name, Integer locaiton) {
+            this.name = name;
+            this.location = locaiton;
+        }
+    }
+
+    @DataTableType
+    public Whereabouts defineWhereabouts(Map<String, String> entry) {
+        return new Whereabouts(entry.get("name"), Integer.parseInt(entry.get("location")));
+    }
 
     @Before
     public void createNetwork() {
@@ -58,12 +74,24 @@ public class StepDefinitions {
         network = new Network(range);
     }
 
+    // option 1 simple DataTable
+//    @Given("people are located at")
+//    public void people_are_located_at(io.cucumber.datatable.DataTable dataTable) {
+//        for (Map<String, String> map : dataTable.asMaps()) {
+//            var person = new Person(map.get("name"));
+//            person.setNetwork(network);
+//            people.put(map.get("name"), person);
+//        }
+//    }
+
+
+    // option 2
     @Given("people are located at")
-    public void people_are_located_at(io.cucumber.datatable.DataTable dataTable) {
-        for (Map<String, String> map : dataTable.asMaps()) {
-            var person = new Person(map.get("name"));
+    public void people_are_located_at(List<Whereabouts> whereaboutsList) {
+        for (Whereabouts whereabouts : whereaboutsList) {
+            var person = new Person(whereabouts.name);
             person.setNetwork(network);
-            people.put(map.get("name"), person);
+            people.put(whereabouts.name, person);
         }
     }
 
