@@ -43,3 +43,18 @@ Feature: Shout
       Then Lucy hears the following messages:
         | Free bagels! |
         | Free toast!  |
+
+
+  Rule: Maximum length of msg is 180 characters
+
+    Scenario: Msg is too long
+      Given a person named Sean
+      And a person named Lucy
+      When Sean shouts the following message
+      """
+    This is a really long msh
+    123456789010101234567890101
+    012345678901010123456789010101234567890101012345678901010123456789010101234567890101012345678901010123456789010101
+    234567890101012345678901010123456789010101234567890101012345678901010123456789010101234567890101012345678901010"
+      """
+      Then Lucy should not hear a shout

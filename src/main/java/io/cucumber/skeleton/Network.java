@@ -22,7 +22,8 @@ public class Network {
 
     public void broadcast(String message, int location) {
         for (Person listener : listeners) {
-            if (listener.InRange(location, this.range)) {
+            boolean shortEnough = message.length() <= 180;
+            if (listener.InRange(location, this.range) && shortEnough) {
                 listener.Hear(message);
             }
         }

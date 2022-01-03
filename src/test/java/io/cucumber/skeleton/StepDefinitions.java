@@ -117,4 +117,14 @@ public class StepDefinitions {
 
         expectedMsg.diff(DataTable.create(actualMessages));
     }
+
+    @When("Sean shouts the following message")
+    public void sean_shouts_the_following_message(String docString) {
+        sean.shout(docString);
+    }
+
+    @Then("Lucy should not hear a shout")
+    public void lucy_should_not_hear_a_shout() {
+        Assert.assertEquals(0, people.get("Lucy").getMessagesHeard().size());
+    }
 }
