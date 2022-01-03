@@ -5,9 +5,15 @@ import java.util.List;
 
 public class Network {
     private final List<Person> listeners;
+    private Integer range = 100;
 
     public Network() {
         listeners = new ArrayList<Person>();
+    }
+
+    public Network(Integer range) {
+        listeners = new ArrayList<Person>();
+        this.range = range;
     }
 
     public void subscribe(Person person) {
@@ -16,7 +22,7 @@ public class Network {
 
     public void broadcast(String message, int location) {
         for (Person listener : listeners) {
-            if (listener.InRange(location)) {
+            if (listener.InRange(location, this.range)) {
                 listener.Hear(message);
             }
         }

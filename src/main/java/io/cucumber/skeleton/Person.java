@@ -5,12 +5,16 @@ import java.util.ArrayList;
 public class Person {
     private final String name;
     private ArrayList<String> messagesHeard = new ArrayList<>();
-    private Integer MAX_HEARING_DISTANCE = 100;
     public Integer location = 0;
     private Network network;
 
     public Person(String name) {
+
         this.name = name;
+    }
+    public Person(String name, int location) {
+        this.name = name;
+        this.location = location;
     }
 
     public void moveTo(Integer location) {
@@ -30,9 +34,9 @@ public class Person {
         messagesHeard.add(msg);
     }
 
-    public boolean InRange(Integer locationOfShoutingSound) {
+    public boolean InRange(Integer locationOfShoutingSound, int range) {
         int distance = this.location - locationOfShoutingSound;
-        return distance <= MAX_HEARING_DISTANCE;
+        return distance <= range;
     }
 
     public ArrayList<String> getMessagesHeard() {

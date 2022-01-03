@@ -8,6 +8,7 @@ import org.junit.Assert;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class StepDefinitions {
 
@@ -15,12 +16,12 @@ public class StepDefinitions {
     private Person rangePerson;
     private String msgFromSean;
     private Network network;
-    private HashMap<String, Person> persons;
+    private HashMap<String, Person> people;
 
     @Before
     public void createNetwork() {
         network = new Network();
-        persons = new HashMap<>();
+        people = new HashMap<>();
     }
 
     @Given("{person} is standing/located {int} metre(s) from Sean")
@@ -49,6 +50,31 @@ public class StepDefinitions {
 
     @Given("a person named {word}")
     public void aPersonNamedLucy(String word) {
-        persons.put(word, new Person(word));
+        people.put(word, new Person(word));
     }
+
+    @Given("the range is {int}")
+    public void the_range_is(Integer range) {
+        network = new Network(range);
+    }
+
+    @Given("people are located at")
+    public void people_are_located_at(io.cucumber.datatable.DataTable dataTable) {
+        for (Map<String, String> map : dataTable.asMaps()) {
+            var person = new Person(map.get("name"));
+            person.setNetwork(network);
+            people.put(map.get("name"), person);
+        }
+    }
+
+    @When("Sean shouts")
+    public void sean_shouts() {
+        people.get("Sean").shout("Hello, world!");
+    }
+
+    @Then("Lucy should hear a shout")
+    public void lucy_should_hear_a_shout() {
+        Assert.assertEquals(1, people.get("Lucy").getMessagesHeard().size());
+    }
+
 }
